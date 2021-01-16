@@ -1,3 +1,0 @@
-les données d'entrées sont des données temporelles (activité cérébrale de la personne pendant la nuit)
-la donnée de sortie est une classification binaire (sexe de la personne)
--> utilisation d'un réseau de neuronnes récurrents (modele LSTM ?)
