@@ -1,0 +1,1 @@
+#créer autant de fonction qu'il y a de modèles différents à tester
