@@ -12,11 +12,11 @@ Dans chaque fichier chacun crée sa fonction en lui donnant un nom logique (sauf
 Etre capable de prédire le sexe d'une personne à partir de son activité cérébrale la nuit.
 
 ### Données
-Pour chaque **donnée** *x* correspond la **classe** *y* (sexe) correspondante
+Pour chaque **donnée** *x* (activité cérébrale) correspond la **classe** *y* (sexe) correspondante
 
 #### Donnée x
 40 segments indépendant de 2 secondes de 7 canaux d'EEG (activité cérébrale) à 250 Hz  
-*1 canal:* est donc constitué de 2*250 = 500 valeurs  
+1 canal est donc constitué de 2*250 = 500 valeurs  
 Chaque donnée est donc de taille (40, 7, 500)
 
 #### Donnée y
@@ -29,7 +29,7 @@ La donnée de sortie est une classification binaire (sexe de la personne)
 Utilisation d'un réseau de neuronnes récurrents (modele LSTM ?)
 
 #### Chargement des données (fichier read_data.py)
-x: données au format h5
+x: données au format h5  
 y: données au format csv
 
 #### Traitement des données (fichier treat_data.py)
