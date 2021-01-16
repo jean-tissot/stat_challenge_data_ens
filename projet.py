@@ -1,5 +1,5 @@
 import os,h5py,keras,pandas as pd
-os.chdir("D:\\fichiers\\Documents\\papiers\\scolarités\\bac+4\\COURS\\stat\\projet stat\\data")
+os.chdir("data")
 
 x_test_file=h5py.File("X_test_new.h5",'r')
 x_train_file=h5py.File("X_train_new.h5",'r')
@@ -22,6 +22,6 @@ model.add(
 )
 model.add(keras.layers.Dropout(rate=0.5))
 model.add(keras.layers.Dense(units=128, activation='relu'))
-model.add(keras.layers.Dense(y_train.shape[1], activation='softmax'))
+model.add(keras.layers.Dense(y_train.shape[0], activation='softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['acc'])
 
