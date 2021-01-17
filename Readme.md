@@ -31,6 +31,7 @@ Utilisation d'un réseau de neuronnes récurrents (modele LSTM ?)
 #### Chargement des données (fichier read_data.py)
 x: données au format h5  
 y: données au format csv
+![alt text](représentation data.JPG "Title")
 
 #### Traitement des données (fichier treat_data.py)
 Est-ce que pour une personne toutes les données sont utiles (sélectionner les données les plus représentatives)  
