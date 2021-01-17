@@ -25,8 +25,7 @@ Chaque donnée est donc de taille (40, 7, 500)
 
 ## Méthode de résolution
 Les données d'entrées sont des données temporelles (activité cérébrale de la personne pendant la nuit)  
-La donnée de sortie est une classification binaire (sexe de la personne)  
-Utilisation d'un réseau de neuronnes récurrents (modele LSTM ?)
+La donnée de sortie est une classification binaire (sexe de la personne) 
 
 #### Chargement des données (fichier read_data.py)
 x: données au format h5  
@@ -38,7 +37,8 @@ Les données sont temporelles. Transformation de Fourrier ?
 
 #### Choix du modèle (fichier deep_learning_lstm.py (ou autre_methode.py))
 Machine learning ? Deep learning ?  
-Modèle qui tient en compte le fait que ce sont des données temporelles  
+Modèle qui tient en compte le fait que ce sont des données temporelles
+Utilisation d'un réseau de neuronnes récurrents ? (modele LSTM ?)  
 https://www.margo-group.com/fr/actualite/tutoriel-quelques-bases-python-prediction-de-series-temporelles/  
 https://ichi.pro/fr/classification-des-series-temporelles-pour-la-reconnaissance-de-l-activite-humaine-avec-les-lstm-utilisant-tensorflow-2--202405754633727
 
