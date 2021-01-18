@@ -9,6 +9,5 @@ def dataread():
     x_train=x_train_file['features']
     N_test=x_test.shape[0]
     N_train=x_train.shape[1]
-    y_test=pd.read_csv("y_lol_kSI9ffn.csv").label
     y_train=pd.read_csv("y_train_AvCsavx.csv").label
-    return x_test, y_test, x_train, y_train, N_test, N_train
+    return x_test, x_train, y_train, N_test, N_train
