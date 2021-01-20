@@ -19,15 +19,18 @@ def data_treat_vector():
 
 def data_treat_alea_window():
     x, y, x_valid = dataread()
-    
+
     x_alea_window=[]
     x_valid_alea_window=[]
     shape=x.shape
+    print("\tloading random windows from x...")
     for data in x:
         x_alea_window.append(data[randint(0,shape[1]-1)])
+    print("\tloading random windows from x_valid...")
     for data in x_valid:
         x_valid_alea_window.append(data[randint(0,shape[1]-1)])
     
+    print("\tsplitting x and y in train and test vectors...")
     x_train, x_test, y_train, y_test = train_test_split(x_alea_window, y, train_size = 0.6)
 
     return x_train, x_test, y_train, y_test, x_valid, shape[2:]
