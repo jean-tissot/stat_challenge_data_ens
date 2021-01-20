@@ -1,11 +1,11 @@
 from keras import Sequential
-from keras.layers import LSTM, Dense
+from keras.layers import LSTM, Dense, Flatten
 
 def test_model(input_shape):
   model = Sequential(
     [
-    Dense(32, activation='relu', input_shape=input_shape),
-    Dense(3, activation='softmax')
+      Dense(32, activation='relu', input_shape=input_shape),
+      Dense(2, activation='softmax') # 2 classes possible en sortie (homme ou femme)
     ]
   )
 
@@ -20,8 +20,8 @@ def test_model(input_shape):
 def lstm_model(input_shape):
   model = Sequential(
     [
-    LSTM(units=32, activation='relu', input_shape=input_shape),
-    Dense(3, activation='softmax')
+      LSTM(units=32, activation='relu', input_shape=input_shape),
+      Dense(2, activation='softmax') # 2 classes possible en sortie (homme ou femme)
     ]
   )
 

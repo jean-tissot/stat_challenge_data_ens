@@ -1,4 +1,6 @@
 
+import sys
+
 def vector_generator(data):
     #génère un vecteur de dimension 1 à partir d'un vecteur de dimension 2 ou plus
     #au lieu de retourner une liste contenant toutes les données (ce qui prend trop de temps) on retourne élément par élément à la demande
@@ -9,3 +11,6 @@ def vector_generator(data):
                 yield d_recurrent
         except:
             yield d
+
+def print_load(pourcentage, message=""):
+    sys.stdout.write("\r" + message +" {:.2f} %".format(100*pourcentage))
