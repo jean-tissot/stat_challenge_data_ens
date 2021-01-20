@@ -1,0 +1,4 @@
+démarche suivie:
+tout d'abord effectuer des tests sur une seulement une partie des données,
+afin de déterminer un modèle qui soit pertinent.
+(sélection d'1 fenêtre aléatoire parmi les 40, car elles sont indépendantes)
