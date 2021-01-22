@@ -1,7 +1,7 @@
 from keras import Sequential
 from keras.layers import LSTM, Dense, Flatten
 
-def test_model(input_shape):
+def model_of_test(input_shape):
   model = Sequential(
     [
       Dense(32, activation='relu', input_shape=input_shape),
