@@ -1,4 +1,4 @@
-from model import lstm_model, test_model
+from model import lstm_model, model_of_test
 import keras
 
 
@@ -11,12 +11,12 @@ def train_lstm_model(input_shape, x_train, y_train):
     
     return my_model
 
-def train_test_model(input_shape, x_train, y_train):
+def train_model_of_test(input_shape, x_train, y_train, epochs = 10, batch_size = 32):
     print("\tcreating test model...")
-    my_model = test_model(input_shape)
+    my_model = model_of_test(input_shape)
 
     print("\ttraining test model...")
-    my_model.fit(x_train, y_train)
+    my_model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
 
     return my_model
 
