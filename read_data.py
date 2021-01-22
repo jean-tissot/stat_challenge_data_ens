@@ -1,11 +1,14 @@
-import os,h5py,pandas as pd
+import h5py,pandas as pd, numpy as np
 
-os.chdir("data")
 
 def dataread():
-    x_valid_file=h5py.File("X_test_new.h5",'r')
-    x_train_file=h5py.File("X_train_new.h5",'r')
-    x_valid=x_valid_file['features']
-    x=x_train_file['features']
-    y=pd.read_csv("y_train_AvCsavx.csv").label
-    return x, y, x_valid
+    X_file=h5py.File("data/X_train_new.h5",'r') # X est ici au format "HDF5 dataset"
+    X=np.array(X_file['features']) # X est ici au format "ndarray"
+    
+    X_final_file=h5py.File("data/X_test_new.h5",'r') # X_final est ici au format "HDF5 dataset"
+    X_final=np.array(X_final_file['features']) # X_final est ici au "ndarray"
+
+    y=pd.read_csv("data/y_train_AvCsavx.csv") # y est ici au format "pandas DataFrame"
+    y=np.array(y['label']) # y est ici au format "ndarray"
+
+    return X, y, X_final
