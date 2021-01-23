@@ -1,4 +1,4 @@
-from model import lstm_model, model_of_test
+from models import lstm_model, model_of_test
 import keras
 
 
