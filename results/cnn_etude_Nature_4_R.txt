@@ -1,0 +1,7 @@
+Parametres d'apprentissage :
+Epochs -> 150
+Batch_size -> 70
+Validation -> 0.1
+
+Accuracy -> 68.42105263157895
+ROC AUC -> 0.7606021131856998
