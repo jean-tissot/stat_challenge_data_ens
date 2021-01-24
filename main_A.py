@@ -1,34 +1,24 @@
-from read_data import dataread
-from treat_data import datatreat_1, datatreat_2
-from models import cnn_1
+from data import dataread, datatreat_1, datatreat_2, datatreat_3, datatreat_4
+from models import cnn_1, cnn_2
+from test import test_1, test_2
+from tools import save_model, save_results
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 
-physical_devices = tf.config.experimental.list_physical_devices('GPU')
-tf.config.experimental.set_memory_growth(physical_devices[0], True)
+
+id='cnn_Nature'
 
 X, y, X_final = dataread()
 
-X_train, X_test, y_train, y_test = datatreat_1(X, y)
+X_train, X_test, y_train, y_test = datatreat_4(X, y)
 
-X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
-X_test = X_test.reshape(X_test.shape[0], 7, 500, 1)
+model = cnn_1()
 
-X_train = X_train.astype('float32')
-X_test = X_test.astype('float32')
+model.fit(X_train, np.array(y_train), epochs=150, batch_size=70, validation_split=0.1)
 
-print(np.shape(X_train))
-print(np.shape(X_test))
-print(np.shape(y_train))
-print(np.shape(y_test))
+save_model(model, id)
 
-benchmark = cnn_1()
+accuracy, roc = test_1(model, X_test, y_test, id)
 
-print(benchmark.summary())
-
-benchmark.fit(X_train, y_train, epochs=5)
-
-print("Evaluate on test data")
-results = benchmark.evaluate(X_test, y_test)
-print("test loss, test acc:", results)
+save_results(id, 150, 70, accuracy, roc, 0.1)

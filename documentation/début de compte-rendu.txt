@@ -10,3 +10,6 @@ y
 y_train, y_test
 
 X_final
+
+aurock = librairie scikitlearn tp basic classif
+

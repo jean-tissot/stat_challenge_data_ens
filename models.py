@@ -47,6 +47,8 @@ def cnn_1():
       layers.MaxPool2D((2,2), padding='same'),
       layers.Conv2D(400, (1,7), padding='same', activation='relu'),
       layers.MaxPool2D((1,2), padding='same'),
+      layers.Conv2D(100, (1,3), padding='same', activation='relu'),
+      layers.Conv2D(100, (1,3), padding='same', activation='relu'),
       layers.Flatten(),
       layers.Dense(500, activation='relu'),
       layers.Dense(1, activation='sigmoid')
@@ -59,8 +61,30 @@ def cnn_1():
     metrics=['accuracy']
   )
 
+  print(model.summary())
+
   return model
 
 
-#layers.Conv2D(100, (1,3), padding='same', activation='relu'),
-#layers.Conv2D(100, (1,3), padding='same', activation='relu'),
+def cnn_2():
+  model = keras.Sequential(
+    [
+      layers.Conv2D(100, (3,3), padding='same', activation='relu', input_shape=(7,500,1)),
+      layers.MaxPool2D((2,2), padding='same'),
+      layers.Conv2D(100, (3,3), padding='same', activation='relu'),
+      layers.MaxPool2D((2,2), padding='same'),
+      layers.Flatten(),
+      layers.Dense(64, activation='relu'),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+
+  model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+  )
+
+  print(model.summary())
+
+  return model

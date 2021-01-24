@@ -1,6 +1,6 @@
-from treat_data import data_treat_vector, data_treat_alea_window
-from train_model import train_lstm_model, train_model_of_test
-from test_model import test_model
+from data import data_treat_vector, data_treat_alea_window
+from train import train_lstm_model, train_model_of_test
+from test import test_model
 
 print("loading data...")
 x_train, x_test, y_train, y_test, x_valid, data_shape = data_treat_alea_window()
