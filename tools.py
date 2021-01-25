@@ -1,3 +1,4 @@
+#from data import dataread, datatreat_4
 import os.path
 import sys
 import numpy as np
@@ -5,6 +6,7 @@ import tensorflow as tf
 from tensorflow import keras
 import itertools
 import matplotlib.pyplot as plt
+
 
 def vector_generator(data):
     #génère un vecteur de dimension 1 à partir d'un vecteur de dimension 2 ou plus
@@ -33,16 +35,25 @@ def load_model(id):
     return keras.models.load_model('models/'+id)
 
 
-def save_results(id, epochs, batch_size, accuracy, roc, valid=0):
+def save_results(id, treat, model, epochs, batch_size, accuracy, roc, f1_macro, f1_wei, valid=0):
     if os.path.isfile('models/'+id+'_R.txt')==False:
         file=open('results/'+id+'_R.txt', 'w+')
+        file.write("Acquisition des des donnees -> "+ treat + "\n")
+        file.write("\n")
+        file.write("Modele -> " + model + "\n")
+        file.write("\n")
         file.write("Parametres d'apprentissage :\n")
+        file.write("\n")
         file.write("Epochs -> "+str(epochs)+"\n")
         file.write("Batch_size -> "+str(batch_size)+"\n")
         file.write("Validation -> "+str(valid)+"\n")
         file.write("\n")
+        file.write("Resultats du test :\n")
+        file.write("\n")
         file.write("Accuracy -> "+str(accuracy)+"\n")
         file.write("ROC AUC -> "+str(roc)+"\n")
+        file.write("f1 score (macro) -> "+str(f1_macro)+"\n")
+        file.write("f1 score (weighted) -> "+str(f1_wei)+"\n")
         file.close()
     else:
         print('Résultats déjà enregistré')
@@ -75,3 +86,33 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.savefig('results/'+id+'_CM.png')
+
+
+#en cours de dev
+def visualize_data():
+    a0, b0, c0 = dataread()
+
+    y1, y2 = datatreat_4(a0, b0, 'Standardization')[4:]
+
+    print(y1)
+    print(y1.shape)
+    print(y2)
+    print(y2.shape)
+
+    x=range(500)
+
+    plt.figure(figsize=(10, 5))
+
+    for i in range(7):
+        plt.subplot(7, 2, (2*i)%2+1+2*i) 
+        plt.plot(x, y1[i,:], linewidth=2, color='red')
+
+        plt.subplot(7, 2, (2*i+1)%2+1+2*i) 
+        plt.plot(x, y2[i,:], linewidth=2, color='blue')
+
+    plt.show()
+
+    #plt.grid()
+    #plt.xlabel("x")
+    #plt.ylabel("y")
+    #plt.title("b")
