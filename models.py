@@ -73,8 +73,38 @@ def cnn_2():
       layers.MaxPool2D((2,2), padding='same'),
       layers.Conv2D(100, (3,3), padding='same', activation='relu'),
       layers.MaxPool2D((2,2), padding='same'),
+      layers.Conv2D(300, (3,3), padding='same', activation='relu'),
+      layers.MaxPool2D((2,2), padding='same'),
+      layers.Conv2D(300, (3,3), padding='same', activation='relu'),
+      layers.MaxPool2D((2,2), padding='same'),
       layers.Flatten(),
-      layers.Dense(64, activation='relu'),
+      layers.Dense(150, activation='relu'),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+
+  model.compile(
+    loss='binary_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']
+  )
+
+  print(model.summary())
+
+  return model
+
+
+def cnn_3():
+  model = keras.Sequential(
+    [
+      layers.Conv2D(96, (3,3), padding='same', activation='relu', input_shape=(7,500,1)),
+      layers.Conv2D(96, (3,3), padding='same', activation='relu'),
+      layers.Conv2D(96, (3,3), padding='same', strides=2, activation='relu'),
+      layers.Conv2D(192, (3,3), padding='same', activation='relu'),
+      layers.Conv2D(192, (3,3), padding='same', activation='relu'),
+      layers.Conv2D(192, (3,3), padding='same', strides=2, activation='relu'),
+      layers.Flatten(),
+      layers.Dense(200, activation='relu'),
       layers.Dense(1, activation='sigmoid')
     ]
   )

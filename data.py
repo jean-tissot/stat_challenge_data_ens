@@ -3,6 +3,8 @@ import h5py
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import scale, StandardScaler, MinMaxScaler
+import matplotlib.pyplot as plt
 
 
 def dataread():
@@ -50,7 +52,7 @@ def datatreat_2():
 
 
 def datatreat_3(X0, y0):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.7, shuffle=True)
+    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
     X_train=[]
     y_train=[]
     for i in range(np.shape(X1)[0]):
@@ -63,9 +65,28 @@ def datatreat_3(X0, y0):
     return X_train, np.array(X_test), np.array(y_train), np.array(y_test)
 
 
-def datatreat_4(X0, y0):
+def datatreat_4(X0, y0, preprocess='None'):
     X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
     
+    a=X1[0,0,:,:]
+
+    if preprocess=='Standardization':
+        for i in range(X1.shape[0]):
+            for j in range(40):
+                X1[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X1[i,j,:,:])))
+        for i in range(X_test.shape[0]):
+            for j in range(40):
+                X_test[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
+    if preprocess=='Normalization':
+        for i in range(X1.shape[0]):
+            for j in range(40):
+                X1[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X1[i,j,:,:])))
+        for i in range(X_test.shape[0]):
+            for j in range(40):
+                X_test[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
+
+    b=X1[0,0,:,:]
+
     X_train=[]
     y_train=[]
     for i in range(np.shape(X1)[0]):
