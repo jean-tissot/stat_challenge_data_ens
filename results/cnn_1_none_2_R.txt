@@ -10,7 +10,7 @@ Validation -> 0.1
 
 Resultats du test :
 
-Accuracy -> 75.26315789473685
+Accuracy -> 80.0
 ROC AUC -> 0.5
-f1 score (macro) -> 0.42942942942942947
-f1 score (weighted) -> 0.646404299035878
+f1 score (macro) -> 0.4444444444444445
+f1 score (weighted) -> 0.7111111111111111
