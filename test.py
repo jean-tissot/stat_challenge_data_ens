@@ -1,4 +1,4 @@
-from tools import plot_confusion_matrix
+from tools import plot_confusion_matrix, plot_loss_acc_history
 import numpy as np
 import tensorflow as tf
 from tensorflow import keras

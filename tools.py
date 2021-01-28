@@ -60,7 +60,6 @@ def save_results(id, treat, model, epochs, batch_size, accuracy, roc, f1_macro, 
 
 
 def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix', cmap=plt.cm.Blues, id=''):
-    
     plt.imshow(cm, interpolation='nearest', cmap=cmap)
     plt.title(title)
     plt.colorbar()
@@ -86,6 +85,33 @@ def plot_confusion_matrix(cm, classes, normalize=False, title='Confusion matrix'
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
     plt.savefig('results/'+id+'_CM.png')
+
+
+def plot_loss_acc_history(history, id, validation_split=0):
+    loss_train=history.history['loss']
+    acc_train=history.history['accuracy']
+    if validation_split>0:
+        acc_val=history.history['val_accuracy']
+        loss_val=history.history['val_loss']
+    
+    x=range(1,len(loss_train)+1,1)
+
+    fig, axs = plt.subplots(2, sharex=True)
+    fig.suptitle('Evolution of loss and accuracy during the training')
+    
+    axs[0].plot(x, loss_train, linewidth=2, color='red', label="Training")
+    if validation_split>0: 
+        axs[0].plot(x, loss_val, linewidth=2, color='blue', label="Validation")
+    axs[0].set_title('Loss')
+    axs[0].legend(shadow=True, fancybox=True)
+
+    axs[1].plot(x, acc_train, linewidth=2, color='red', label="Training")
+    if validation_split>0:
+        axs[1].plot(x, acc_val, linewidth=2, color='blue', label="Validation")
+    axs[1].set_title('Accuracy')
+    axs[1].legend(shadow=True, fancybox=True)
+
+    fig.savefig('results/'+id+'_HIST.png')
 
 
 #en cours de dev
