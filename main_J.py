@@ -1,14 +1,25 @@
-from data import data_treat_vector, data_treat_alea_window
-from train import train_lstm_model, train_model_of_test
-from test import test_model
+from data import dataread, datatreat_1, datatreat_2, datatreat_3, datatreat_4
+from test import test_1
+from models import model_of_test, lstm_model
+
+treat_function = datatreat_3
+my_model = model_of_test
+test_fonction = test_1
+epochs=20
+batch_size=32
+id='test'
 
 print("loading data...")
-x_train, x_test, y_train, y_test, x_valid, data_shape = data_treat_alea_window()
+x, y, x_final = dataread()
+
+print("treating data...")
+x_train, x_test, y_train, y_test = treat_function(x, y)
 
 print("training model...")
-model = train_model_of_test(data_shape, x_train, y_train, 30)
+model = my_model(x_train[0].shape)
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size)
 
 print("testing model...")
-loss, accuracy = test_model(model, x_test, y_test)
+accuracy, roc, f1_macro, f1_wei = test_1(model, x_test, y_test, id)
 
-print("results (loss, accuracy):", loss, accuracy)
+print("results (accuracy, roc, f1_macro, f1_wei):", accuracy, roc, f1_macro, f1_wei)
