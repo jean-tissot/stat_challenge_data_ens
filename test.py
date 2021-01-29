@@ -4,7 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 from sklearn.metrics import roc_auc_score, confusion_matrix, f1_score
 
-def test(predicts, y_test, id):
+def test(predicts1, y_test, id):
     predicts2=np.array([1 if predicts1[i]>0.5 else 0 for i in range(len(predicts1))])
     
     accuracy=(np.count_nonzero(predicts2==y_test))/len(y_test)*100

@@ -24,7 +24,8 @@ def lstm_model(input_shape):
   model = keras.Sequential(
     [
       layers.LSTM(units=32, activation='relu', input_shape=input_shape),
-      layers.Dense(2, activation='softmax') # 2 classes possible en sortie (homme ou femme)
+      layers.Flatten(),
+      layers.Dense(1, activation='sigmoid')
     ]
   )
 

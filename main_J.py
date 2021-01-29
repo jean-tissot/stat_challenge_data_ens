@@ -1,9 +1,9 @@
 from data import dataread, datatreat_1, datatreat_2, datatreat_3, datatreat_4
 from test import test_1
-from models import model_of_test
+from models import model_of_test, lstm_model
 
-treat_function=datatreat_3
-my_model=model_of_test
+treat_function = datatreat_3
+my_model = model_of_test
 test_fonction = test_1
 epochs=20
 batch_size=32
