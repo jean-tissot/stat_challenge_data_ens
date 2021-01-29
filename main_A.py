@@ -7,14 +7,14 @@ import tensorflow as tf
 from tensorflow import keras
 
 
-id='testing'
-epochs=5
+id='cnn_1_none_1'
+epochs=200
 batch_size=70
 validation_split=0.1
 
 X, y, X_final = dataread()
 
-X_train, X_test, y_train, y_test, prop_HF = datatreat_A1(X, y, train_size=0.8, Shuffle=True, preprocess='Standardization', ratio='50/50', balancing_method='duplicate')
+X_train, X_test, y_train, y_test, prop_HF = datatreat_A1(X, y, train_size=0.8, Shuffle=True)
 
 model = cnn_1()
 

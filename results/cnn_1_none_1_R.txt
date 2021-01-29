@@ -1,4 +1,4 @@
-Acquisition des des donnees -> datatreat_3
+Acquisition des des donnees -> datatreat_A1
 
 Modele -> cnn_1
 
@@ -10,7 +10,7 @@ Validation -> 0.1
 
 Resultats du test :
 
-Accuracy -> 77.89473684210526
-ROC AUC -> 0.5
-f1 score (macro) -> 0.4378698224852071
-f1 score (weighted) -> 0.6821550918716911
+Accuracy -> 78.94736842105263
+ROC AUC -> 0.5091666666666665
+f1 score (macro) -> 0.46463792617638777
+f1 score (weighted) -> 0.7060699084990583
