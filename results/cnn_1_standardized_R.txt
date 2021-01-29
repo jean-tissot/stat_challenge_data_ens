@@ -1,0 +1,16 @@
+Acquisition des donnees -> datatreat_4 "Standardized"
+
+Modele -> cnn_1
+
+Parametres d'apprentissage :
+
+Epochs -> 200
+Batch_size -> 70
+Validation -> 0.1
+
+R�sultats du test :
+
+Accuracy -> 60.526315789473685
+ROC AUC -> 0.6255868544600939
+f1 score (macro) -> 0.5746141675870922
+f1 score (weighted) -> 0.6311044634482412
