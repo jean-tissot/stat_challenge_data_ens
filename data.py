@@ -39,17 +39,13 @@ def datatreat_1(X0, y0):
     return X_train, X_test, np.array(y_train), np.array(y_test)
 
 
-def datatreat_2():
-    x, y, x_valid = dataread()
-
-    # treat data here (create a vector with data)
-    shape=x.shape
-    x = [vector_generator(data) for data in x]
-    x_valid = [vector_generator(data) for data in x_valid]
+def datatreat_2(X0, y0):
+    shape=X0.shape
+    x = [vector_generator(data) for data in X0]
     
     x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.6)
 
-    return x_train, x_test, y_train, y_test, x_valid, shape[1]*shape[2]*shape[3]
+    return x_train, x_test, y_train, y_test
 
 
 def datatreat_3(X0, y0):
