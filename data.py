@@ -63,7 +63,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                         fem.append(i)
                 add_X = np.take(X_train, fem, axis=0)
                 add_y = np.take(y_train, fem, axis=0)
-                for i in range(int((1-prop_f)/prop_f)):
+                for i in range(round((1-prop_f)/prop_f)-1):
                     X_train=np.concatenate((X_train,add_X), axis=0)
                     y_train=np.concatenate((y_train,add_y), axis=0)
             
