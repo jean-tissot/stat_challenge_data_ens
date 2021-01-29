@@ -21,258 +21,92 @@ def dataread():
     return X, y, X_final
 
 
-def datatreat_1(X0, y0):
-    X=[]
-    y=[]
-    for i in range(np.shape(X0)[0]):
-        for j in range(np.shape(X0)[1]):
-            X.append(X0[i,j,:,:])
-            y.append(y0[i])
-
-    X_train, X_test, y_train, y_test = train_test_split(X, y, train_size = 0.7, shuffle=True)
-
-    X_train=np.array(X_train)
-    X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
-    X_test=np.array(X_test)
-    X_test = X_test.reshape(X_test.shape[0], 7, 500, 1)
-
-    return X_train, X_test, np.array(y_train), np.array(y_test)
-
-
-def datatreat_2():
-    x, y, x_valid = dataread()
-
-    # treat data here (create a vector with data)
-    shape=x.shape
-    x = [vector_generator(data) for data in x]
-    x_valid = [vector_generator(data) for data in x_valid]
+def preprocess_A1(X_train, X_test, preprocess='None'):
+    if preprocess == 'Standardization':
+        for i in range(X_train.shape[0]):
+            for j in range(40):
+                X_train[i,j,:,:] = np.transpose(StandardScaler().fit_transform(np.transpose(X_train[i,j,:,:])))
+        for i in range(X_test.shape[0]):
+            for j in range(40):
+                X_test[i,j,:,:] = np.transpose(StandardScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
+    if preprocess == 'Normalization':
+        for i in range(X_train.shape[0]):
+            for j in range(40):
+                X_train[i,j,:,:] = np.transpose(MinMaxScaler().fit_transform(np.transpose(X_train[i,j,:,:])))
+        for i in range(X_test.shape[0]):
+            for j in range(40):
+                X_test[i,j,:,:] = np.transpose(MinMaxScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
     
-    x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.6)
-
-    return x_train, x_test, y_train, y_test, x_valid, shape[1]*shape[2]*shape[3]
+    return X_train, X_test
 
 
-def datatreat_3(X0, y0):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
+def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/remove"):
+    
+    if ratio == "50/50":
+        prop_f = np.count_nonzero(y_train) / y_train.shape[0]
+
+        if prop_f < 0.5:
+            if balancing_method == "remove":
+                mask = []
+                for i in range(y_train.shape[0]):
+                    if y_train[i]==0:
+                        mask.append(i)
+                mask = np.array(mask)
+                mask = np.resize(mask, (int(np.shape(mask)[0]-y_train.shape[0]*(prop_f)),1))
+                X_train = np.delete(X_train, mask, 0)
+                y_train = np.delete(y_train, mask, 0)
+            
+            if balancing_method == "duplicate":
+                fem = []
+                for i in range(y_train.shape[0]):
+                    if y_train[i] == 1:
+                        fem.append(i)
+                add_X = np.take(X_train, fem, axis=0)
+                add_y = np.take(y_train, fem, axis=0)
+                for i in range(int((1-prop_f)/prop_f)):
+                    X_train=np.concatenate((X_train,add_X), axis=0)
+                    y_train=np.concatenate((y_train,add_y), axis=0)
+            
+            if balancing_method == "duplicate/remove":
+                while prop_f < 0.5:
+                    for i in range(y_train.shape[0]):
+                        if y_train[i] == 1:
+                            temp = X_train[i]
+                            break
+                    for i in range(y_train.shape[0]):
+                        if y_train[i] == 0:
+                            X_train[i] = temp
+                            y_train[i] = 1
+                            break
+                    prop_f = np.count_nonzero(y_train)/np.shape(y_train)[0]
+            
+    prop_f = np.count_nonzero(y_train)/np.shape(y_train)[0]
+    prop_HF = (1-prop_f) / prop_f
+
+    print("La proportion H/F des données d'entraînement est de " + str(prop_HF))
+
+    return X_train, y_train, prop_HF
+
+
+def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
+    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
+
+    X_train, X_test = preprocess_A1(X1, X_test, preprocess)
+
     X_train=[]
     y_train=[]
     for i in range(np.shape(X1)[0]):
         for j in range(np.shape(X1)[1]):
             X_train.append(X1[i,j,:,:])
             y_train.append(y1[i])
-    X_train=np.array(X_train)
-    X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
-
-    return X_train, np.array(X_test), np.array(y_train), np.array(y_test)
-
-
-def datatreat_4(X0, y0, preprocess='None'):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
-    
-    a=X1[0,0,:,:]
-
-    if preprocess=='Standardization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess=='Normalization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-
-    b=X1[0,0,:,:]
-
-    X_train=[]
-    y_train=[]
-    for i in range(np.shape(X1)[0]):
-        for j in range(np.shape(X1)[1]):
-            X_train.append(X1[i,j,:,:])
-            y_train.append(y1[i])
-
     X_train=np.array(X_train)
     y_train=np.array(y_train)
-
-    prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-
-    if prop_f<0.5:
-        mask=[]
-        for i in range(np.shape(y_train)[0]):
-            if y_train[i]==0:
-                mask.append(i)
-        mask=np.array(mask)
-        mask=np.resize(mask, (int(np.shape(mask)[0]-np.shape(y_train)[0]*(prop_f)),1))
-        remove=int((np.shape(mask)[0]/np.shape(y_train)[0])*100)
-        print(str(remove) + ' % des données d entraînement ont été retirées pour obtenir un dataset équilibré' )
-        X_train=np.delete(X_train, mask, 0)
-        y_train=np.delete(y_train, mask, 0)
-
-    X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
-
-    return X_train, np.array(X_test), y_train, np.array(y_test)
-
-
-def datatreat_5(X0, y0, preprocess='None'):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
-    
-    a=X1[0,0,:,:]
-
-    if preprocess=='Standardization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess=='Normalization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-
-    b=X1[0,0,:,:]
-
-    X_train=[]
-    y_train=[]
-    for i in range(np.shape(X1)[0]):
-        for j in range(np.shape(X1)[1]):
-            X_train.append(X1[i,j,:,:])
-            y_train.append(y1[i])
-
-    X_train=np.array(X_train)
-    y_train=np.array(y_train)
-
     X_train, y_train = shuffle(X_train, y_train)
 
-    prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-
-    if prop_f<0.5:
-        mask=[]
-        for i in range(np.shape(y_train)[0]):
-            if y_train[i]==0:
-                mask.append(i)
-        mask=np.array(mask)
-        mask=np.resize(mask, (int(np.shape(mask)[0]-np.shape(y_train)[0]*(prop_f)),1))
-        remove=int((np.shape(mask)[0]/np.shape(y_train)[0])*100)
-        print(str(remove) + ' % des données d entraînement ont été retirées pour obtenir un dataset équilibré' )
-        X_train=np.delete(X_train, mask, 0)
-        y_train=np.delete(y_train, mask, 0)
-
-    X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
-
-    return X_train, np.array(X_test), y_train, np.array(y_test)
-
-
-def datatreat_6(X0, y0, preprocess='None', n_dup=1):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
-    
-    if preprocess=='Standardization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess=='Normalization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-
-    X_train=[]
-    y_train=[]
-    for i in range(np.shape(X1)[0]):
-        for j in range(np.shape(X1)[1]):
-            X_train.append(X1[i,j,:,:])
-            y_train.append(y1[i])
-
-    X_train=np.array(X_train)
-    y_train=np.array(y_train)
-
-    prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-
-    if prop_f<0.5:
-        new_X=[]
-        new_y=[]
-        for i in range(np.shape(y_train)[0]):
-            if y_train[i]==0:
-                new_X.append(X_train[i,:,:])
-                new_y.append(y_train[i])
-            else:
-                for j in range(n_dup):
-                    new_X.append(X_train[i,:,:])
-                    new_y.append(y_train[i])
-    
-    X_train=np.array(new_X)
-    y_train=np.array(new_y)
-
-    prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-    print("La proportion h/f obtenue après duplication des data f est maintenant de : " + str(prop_f))
+    X_train, y_train, prop_HF = balancing_A1(X_train, y_train, ratio, balancing_method)
 
     X_train, y_train = shuffle(X_train, y_train)
 
     X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
 
-    return X_train, np.array(X_test), y_train, np.array(y_test)
-
-
-def datatreat_7(X0, y0, preprocess='None'):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=0.8, shuffle=True)
-    
-    if preprocess=='Standardization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(StandardScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess=='Normalization':
-        for i in range(X1.shape[0]):
-            for j in range(40):
-                X1[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X1[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:]=np.transpose(MinMaxScaler().fit_transform(np.transpose(X_test[i,j,:,:])))
-
-    X_train=[]
-    y_train=[]
-    for i in range(np.shape(X1)[0]):
-        for j in range(np.shape(X1)[1]):
-            X_train.append(X1[i,j,:,:])
-            y_train.append(y1[i])
-
-    X_train=np.array(X_train)
-    y_train=np.array(y_train)
-
-    X_train, y_train = shuffle(X_train, y_train)
-
-    prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-
-    if prop_f<0.5:
-        while prop_f<0.5:
-            for i in range(y_train.shape[0]):
-                if y_train[i]==1:
-                    temp=X_train[i]
-                    break
-            for i in range(y_train.shape[0]):
-                if y_train[i]==0:
-                    X_train[i]=temp
-                    y_train[i]=1
-                    break
-            prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-
-    prop_f=np.count_nonzero(y_train)/np.shape(y_train)[0]
-    print("La proportion h/f obtenue après traitement est maintenant de : " + str(prop_f))
-
-    X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
-
-    return X_train, np.array(X_test), y_train, np.array(y_test)
+    return X_train, X_test, y_train, y_test, prop_HF

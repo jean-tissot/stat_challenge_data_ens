@@ -36,7 +36,7 @@ def load_model(id):
 
 
 def save_results(id, treat, model, epochs, batch_size, accuracy, roc, f1_macro, f1_wei, valid=0):
-    if os.path.isfile('models/'+id+'_R.txt')==False:
+    if os.path.isfile('results/'+id+'_R.txt')==False:
         file=open('results/'+id+'_R.txt', 'w+')
         file.write("Acquisition des des donnees -> "+ treat + "\n")
         file.write("\n")

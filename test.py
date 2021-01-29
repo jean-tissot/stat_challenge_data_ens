@@ -41,6 +41,7 @@ def test_1(model, X_test, y_test, id):
 
 
 def test_2(model, X_test, y_test, id):
+    X_test_i=X_test_i.reshape(X_test_i.shape[0], 7, 500, 1)
     predicts1=model.predict(X_test)
     predicts2=np.array([1 if predicts1[i]>0.5 else 0 for i in range(len(predicts1))])
 
