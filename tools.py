@@ -125,6 +125,6 @@ def square_nonlin(x):
 def square(x):
   return x*x
 
-def log(x, eps=1e-6):
+def log(x, eps=1e-6, max=1e8):
     #eviter log(0) en imposant une valeur min eps
-    return tf.math.log(tf.clip_by_value(x, clip_value_min=eps))
+    return tf.math.log(tf.clip_by_value(x, clip_value_min=eps, clip_value_max=max))
