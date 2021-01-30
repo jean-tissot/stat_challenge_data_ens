@@ -6,6 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import scale, StandardScaler, MinMaxScaler
 from sklearn.utils import shuffle
 import matplotlib.pyplot as plt
+from imblearn.over_sampling import SMOTE, ADASYN
 
 
 def dataread():
@@ -76,7 +77,29 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                             y_train[i] = 1
                             break
                     prop_f = np.count_nonzero(y_train)/np.shape(y_train)[0]
-            
+
+            if balancing_method == 'SMOTE':
+                X=np.zeros(((X_train.shape[0]-nb_f)*2,7,500))
+                for i in range(7):
+                    X[:,i,:], y = SMOTE(sampling_strategy=1).fit_resample(X_train[:,i,:], y_train)
+                X_train = X
+                y_train = y 
+
+            if balancing_method == 'ADASYN':
+                X=np.zeros(((X_train.shape[0]-nb_f)*2,7,500))
+                test=[]
+                for i in range(7):
+                    X[:,i,:], y = ADASYN(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
+                    test.append(y)
+                    print(y.shape)
+                    print(X.shape)
+                print(y.shape)
+                print(X.shape)
+                for i in range(6):
+                    print(np.count_nonzero(test[i]==test[i+1]))
+                X_train = X
+                y_train = y        
+
     prop_f = np.count_nonzero(y_train)/np.shape(y_train)[0]
     prop_HF = (1-prop_f) / prop_f
 
