@@ -5,7 +5,7 @@ from tensorflow import keras
 from sklearn.metrics import roc_auc_score, confusion_matrix, f1_score
 
 def test(predicts, y_test, id):
-    predicts2=(predicts>0.5)
+    predicts2=np.transpose(predicts>0.5)[0]
     accuracy=(np.count_nonzero(predicts2==y_test))/len(y_test)*100
     roc=roc_auc_score(y_test, predicts2)
     f1_macro=f1_score(y_test, predicts2, average='macro')
