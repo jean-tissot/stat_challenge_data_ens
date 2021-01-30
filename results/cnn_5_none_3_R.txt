@@ -1,0 +1,16 @@
+Acquisition des des donnees -> datatreat_A1
+
+Modele -> cnn_5
+
+Parametres d'apprentissage :
+
+Epochs -> 200
+Batch_size -> 64
+Validation -> 0.1
+
+Resultats du test :
+
+Accuracy -> 74.73684210526315
+ROC AUC -> 0.5
+f1 score (macro) -> 0.42771084337349397
+f1 score (weighted) -> 0.6393151553582752
