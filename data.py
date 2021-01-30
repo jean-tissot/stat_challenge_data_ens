@@ -81,7 +81,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
             if balancing_method == 'SMOTE':
                 X=np.zeros(((X_train.shape[0]-nb_f)*2,7,500))
                 for i in range(7):
-                    X[:,i,:], y = SMOTE(sampling_strategy=1).fit_resample(X_train[:,i,:], y_train)
+                    X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
                 X_train = X
                 y_train = y 
 
