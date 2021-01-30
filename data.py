@@ -41,43 +41,35 @@ def preprocess_A1(X_train, X_test, preprocess='None'):
 
 
 def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/remove"):
-    
-    if ratio == "50/50":
-        nb_f = np.count_nonzero(y_train)
-        prop_f =  nb_f / len(y_train)
+    y_train=np.array(y_train)
 
-        if prop_f < 0.5:
-            if balancing_method == "remove":
-                mask = np.where(np.array(y_train)==0)[0]
-                mask = mask[:-nb_f]
-                X_train = np.delete(X_train, mask, 0)
-                y_train = np.delete(y_train, mask, 0)
+    if ratio == "50/50": #on suppose que nb_f < nb_h (dans le cas contraire il suffirait d'inverser nb_f et nb_h, ainsi que mask_f et mask_h)
+        mask_h = np.where(y_train==0)[0] #indices de tous les hommes
+        mask_f = np.where(y_train==1)[0] #indices de toutes les femmes
+        nb_h = len(mask_h) #nombre d'hommes
+        nb_f = len(mask_f) #nombre de femmes
+
+        if balancing_method == "remove":
+            mask_h = mask_h[:-nb_f] #liste de taille (nb_h - nb_f) d'indices d'hommes ) à supprimer
+            mask_f = []
+        
+        elif balancing_method == "duplicate":
+            mask_h = []
+            mask_f = np.resize(mask_f, nb_h - nb_f) #liste de taille (nb_h - nb_f) d'indices de femmes à rajouter (potentiellement répétés)
+        
+        else:
+            nb = (nb_h - nb_f)//2
+            mask_h = mask_h[:nb]
+            mask_f = np.resize(mask_f, nb)
+        
+        add_X = X_train[mask_f,...] #liste des femmes à rajouter
+        add_y = y_train[mask_f]
+        X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
+        y_train = np.delete(y_train, mask_h, 0)
+        X_train=np.concatenate((X_train, add_X), axis=0) #ajout de la liste de femmes
+        y_train=np.concatenate((y_train, add_y), axis=0)
             
-            if balancing_method == "duplicate":
-                fem = []
-                for i in range(y_train.shape[0]):
-                    if y_train[i] == 1:
-                        fem.append(i)
-                add_X = np.take(X_train, fem, axis=0)
-                add_y = np.take(y_train, fem, axis=0)
-                for i in range(round((1-prop_f)/prop_f)-1):
-                    X_train=np.concatenate((X_train,add_X), axis=0)
-                    y_train=np.concatenate((y_train,add_y), axis=0)
-            
-            if balancing_method == "duplicate/remove":
-                while prop_f < 0.5:
-                    for i in range(y_train.shape[0]):
-                        if y_train[i] == 1:
-                            temp = X_train[i]
-                            break
-                    for i in range(y_train.shape[0]):
-                        if y_train[i] == 0:
-                            X_train[i] = temp
-                            y_train[i] = 1
-                            break
-                    prop_f = np.count_nonzero(y_train)/np.shape(y_train)[0]
-            
-    prop_f = np.count_nonzero(y_train)/np.shape(y_train)[0]
+    prop_f = np.count_nonzero(y_train)/len(y_train)
     prop_HF = (1-prop_f) / prop_f
 
     print("La proportion H/F des données d'entraînement est de " + str(prop_HF))
