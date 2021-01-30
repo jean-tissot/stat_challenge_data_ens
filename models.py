@@ -24,6 +24,7 @@ def lstm_model(input_shape):
   model = keras.Sequential(
     [
       layers.LSTM(256, dropout = 0.1, recurrent_dropout = 0.3, input_shape=input_shape),
+      layers.Dense(128, activation = 'relu'),
       layers.Dense(64, activation = 'relu'),
       layers.Dense(1, activation='sigmoid')
     ]
@@ -31,7 +32,7 @@ def lstm_model(input_shape):
 
   model.compile(
     loss='binary_crossentropy',
-    optimizer='adam',
+    optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
     metrics=['accuracy']
   )
   
