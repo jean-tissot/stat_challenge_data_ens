@@ -48,7 +48,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
         if prop_f < 0.5:
             if balancing_method == "remove":
                 mask = []
-                for i in range(y_train.shape[0]):
+                for i in range(len(y_train)):
                     if y_train[i]==0:
                         mask.append(i)
                 mask = np.array(mask)
@@ -89,24 +89,38 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
 
 
 def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
-    X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
 
-    X1, X_test = preprocess_A1(X1, X_test, preprocess)
+    x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
+    
+    x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
 
-    X_train=[]
-    y_train=[]
-    for i in range(np.shape(X1)[0]):
-        for j in range(np.shape(X1)[1]):
-            X_train.append(X1[i,j,:,:])
-            y_train.append(y1[i])
-    X_train=np.array(X_train)
-    y_train=np.array(y_train)
-    X_train, y_train = shuffle(X_train, y_train)
+    x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
+    y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
+    x_train, y_train = shuffle(x_train, y_train)
 
-    X_train, y_train, prop_HF = balancing_A1(X_train, y_train, ratio, balancing_method)
+    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method)
+    x_train, y_train = shuffle(x_train, y_train)
 
-    X_train, y_train = shuffle(X_train, y_train)
+    x_train = x_train.reshape(x_train.shape[0], 7, 500, 1)  #Ajout d'une dimension aux données
 
-    X_train = X_train.reshape(X_train.shape[0], 7, 500, 1)
+    return x_train, x_test, y_train, y_test, prop_HF
 
-    return X_train, X_test, y_train, y_test, prop_HF
+
+def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
+    print("\tsplitting data...")
+    x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
+
+    print("\tpreprocessing data...")
+    x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
+
+    print("\tresizing data...")
+    x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
+    y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
+    x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
+    x_test.transpose(0,1,3,2)
+    x_train, y_train = shuffle(x_train, y_train)
+
+    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method)
+    x_train, y_train = shuffle(x_train, y_train)
+
+    return x_train, x_test, y_train, y_test, prop_HF
