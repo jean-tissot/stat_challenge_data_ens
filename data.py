@@ -91,7 +91,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
 def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
     X1, X_test, y1, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
 
-    X_train, X_test = preprocess_A1(X1, X_test, preprocess)
+    X1, X_test = preprocess_A1(X1, X_test, preprocess)
 
     X_train=[]
     y_train=[]

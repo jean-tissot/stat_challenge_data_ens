@@ -114,31 +114,17 @@ def plot_loss_acc_history(history, id, validation_split=0):
     fig.savefig('results/'+id+'_HIST.png')
 
 
-#en cours de dev
-def visualize_data():
-    a0, b0, c0 = dataread()
+# Fonctions d'activation custom
+def square_nonlin(x):
+    orig = x
+    x = tf.where(orig >2.0, (tf.ones_like(x)) , x)
+    x = tf.where(tf.logical_and(0.0 <= orig, orig <=2.0), (x - tf.math.square(x)/4.), x)
+    x = tf.where(tf.logical_and(-2.0 <= orig, orig < 0), (x + tf.math.square(x)/4.), x)
+    return tf.where(orig < -2.0, -tf.ones_like(x), x)
 
-    y1, y2 = datatreat_4(a0, b0, 'Standardization')[4:]
+def square(x):
+  return x*x
 
-    print(y1)
-    print(y1.shape)
-    print(y2)
-    print(y2.shape)
-
-    x=range(500)
-
-    plt.figure(figsize=(10, 5))
-
-    for i in range(7):
-        plt.subplot(7, 2, (2*i)%2+1+2*i) 
-        plt.plot(x, y1[i,:], linewidth=2, color='red')
-
-        plt.subplot(7, 2, (2*i+1)%2+1+2*i) 
-        plt.plot(x, y2[i,:], linewidth=2, color='blue')
-
-    plt.show()
-
-    #plt.grid()
-    #plt.xlabel("x")
-    #plt.ylabel("y")
-    #plt.title("b")
+def log(x, eps=1e-6):
+    #eviter log(0) en imposant une valeur min eps
+    return tf.math.log(tf.clip_by_value(x, clip_value_min=eps))
