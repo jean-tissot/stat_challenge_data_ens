@@ -48,7 +48,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
         if prop_f < 0.5:
             if balancing_method == "remove":
                 mask = []
-                for i in range(y_train.shape[0]):
+                for i in range(len(y_train)):
                     if y_train[i]==0:
                         mask.append(i)
                 mask = np.array(mask)
@@ -117,6 +117,7 @@ def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio=
     x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
     y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
     x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
+    x_test.transpose(0,1,3,2)
     x_train, y_train = shuffle(x_train, y_train)
 
     x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method)
