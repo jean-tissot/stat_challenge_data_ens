@@ -47,15 +47,20 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
 
     if ratio == "50/50": #on suppose que nb_f < nb_h (dans le cas contraire il suffirait d'inverser nb_f et nb_h, ainsi que mask_f et mask_
 
+        mask_h = np.where(y_train==0)[0] #indices de tous les hommes
+        mask_f = np.where(y_train==1)[0] #indices de toutes les femmes
+        nb_h = len(mask_h) #nombre d'hommes
+        nb_f = len(mask_f) #nombre de femmes
+
         if balancing_method == 'SMOTE':
-            X=np.zeros(((X_train.shape[0]-nb_f)*2,7,500))
+            X=np.zeros((nb_h*2,7,500))
             for i in range(7):
                 X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
             X_train = X
             y_train = y 
 
         elif balancing_method == 'ADASYN':
-            X=np.zeros(((X_train.shape[0]-nb_f)*2,7,500))
+            X=np.zeros((nb_h*2,7,500))
             test=[]
             for i in range(7):
                 X[:,i,:], y = ADASYN(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
@@ -70,10 +75,6 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
             y_train = y   
         
         else:
-            mask_h = np.where(y_train==0)[0] #indices de tous les hommes
-            mask_f = np.where(y_train==1)[0] #indices de toutes les femmes
-            nb_h = len(mask_h) #nombre d'hommes
-            nb_f = len(mask_f) #nombre de femmes
 
             if balancing_method == "remove":
                 mask_h = mask_h[:-nb_f] #liste de taille (nb_h - nb_f) d'indices d'hommes ) à supprimer
