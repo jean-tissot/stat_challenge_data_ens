@@ -22,14 +22,15 @@ def dataread():
     return X, y, X_final
 
 
-def preprocess_A1(X_train, X_test, preprocess='None'):
-    transform = StandardScaler().fit_transform if preprocess == 'Standardization' else MinMaxScaler().fit_transform # preprocess == 'Normalization'
+def preprocess_A1(X_train, X_test, preprocess=None):
     
-    for j in range(40):
-        for i in range(X_train.shape[0]):
-            X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            X_test[i,j,:,:] = np.transpose(transform(np.transpose(X_test[i,j,:,:])))
+    if preprocess:
+        transform = StandardScaler().fit_transform if preprocess == 'Standardization' else MinMaxScaler().fit_transform # preprocess == 'Normalization'
+        for j in range(40):
+            for i in range(X_train.shape[0]):
+                X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
+            for i in range(X_test.shape[0]):
+                X_test[i,j,:,:] = np.transpose(transform(np.transpose(X_test[i,j,:,:])))
     
     return X_train, X_test
 
@@ -46,26 +47,29 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
         nb_f = len(mask_f) #nombre de femmes
 
         if balancing_method == 'SMOTE':
-            X=np.zeros((nb_h*2,7,500))
+            if balancing_method == 'rem/SMOTE':
+                mask_h = mask_h[:-(2*nb_f)] #liste de taille (nb_h - (2*nb_f)) d'indices d'hommes à supprimer
+                X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
+                y_train = np.delete(y_train, mask_h, 0)
+            X, y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,1,:], y_train)
+            X=np.zeros((X.shape[0],7,500))
             for i in range(7):
                 X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
             X_train = X
-            y_train = y 
+            y_train = y
 
         elif balancing_method == 'ADASYN':
-            X=np.zeros((nb_h*2,7,500))
-            test=[]
+            if balancing_method == 'rem/ADASYN':
+                mask_h = mask_h[:-(2*nb_f)] #liste de taille (nb_h - (2*nb_f)) d'indices d'hommes à supprimer
+                X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
+                y_train = np.delete(y_train, mask_h, 0)
+            X, y = ADASYN(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,1,:], y_train)
+            X=np.zeros((X.shape[0],7,500))
             for i in range(7):
                 X[:,i,:], y = ADASYN(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
-                test.append(y)
                 print(y.shape)
-                print(X.shape)
-            print(y.shape)
-            print(X.shape)
-            for i in range(6):
-                print(np.count_nonzero(test[i]==test[i+1]))
             X_train = X
-            y_train = y   
+            y_train = y  
         
         else:
 
@@ -93,11 +97,12 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
     prop_HF = (1-prop_f) / prop_f
 
     print("La proportion H/F des données d'entraînement est de " + str(prop_HF))
+    print("L'échantillon de training comporte " + str(y_train.shape[0]) + ' frames')
 
     return X_train, y_train, prop_HF
 
 
-def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
+def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
 
     x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
     
@@ -115,7 +120,7 @@ def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio=
     return x_train, x_test, y_train, y_test, prop_HF
 
 
-def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
+def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
     x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
 
     x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
