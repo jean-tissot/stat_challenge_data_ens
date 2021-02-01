@@ -46,23 +46,27 @@ def cnn_1():
     [
       layers.Conv2D(100, (3,3), padding='same', activation='relu', input_shape=(7,500,1)),
       layers.MaxPool2D((2,2), padding='same'),
+      layers.Dropout(0.25),
       layers.Conv2D(100, (3,3), padding='same', activation='relu'),
       layers.MaxPool2D((2,2), padding='same'),
+      layers.Dropout(0.25),
       layers.Conv2D(300, (2,3), padding='same', activation='relu'),
       layers.MaxPool2D((2,2), padding='same'),
-      layers.Conv2D(400, (1,7), padding='same', activation='relu'),
+      layers.Dropout(0.25),
+      layers.Conv2D(300, (1,7), padding='same', activation='relu'),
       layers.MaxPool2D((1,2), padding='same'),
+      layers.Dropout(0.25),
       layers.Conv2D(100, (1,3), padding='same', activation='relu'),
       layers.Conv2D(100, (1,3), padding='same', activation='relu'),
       layers.Flatten(),
-      layers.Dense(500, activation='relu'),
+      layers.Dense(3500, activation='relu'),
       layers.Dense(1, activation='sigmoid')
     ]
   )
   model.compile(
     loss='binary_crossentropy',
     optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
-    metrics=['accuracy']
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
   model.summary()
 
@@ -105,7 +109,7 @@ def cnn_2():
   model.compile(
     loss='binary_crossentropy',
     optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
-    metrics=['accuracy']
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
   model.summary()
 
@@ -131,7 +135,49 @@ def cnn_3():
   model.compile(
     loss='binary_crossentropy',
     optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
-    metrics=['accuracy']
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
+  )
+  model.summary()
+
+  return model
+
+
+# CNN deep ConvNet
+def cnn_4():
+  model = keras.Sequential(
+    [
+      layers.Conv2D(filters=25, kernel_size=(1,10), strides=1, padding='same', input_shape=(7,500,1)),
+      layers.Conv2D(filters=25, kernel_size=(7,1), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+      
+      layers.Dropout(0.5),
+      layers.Conv2D(filters=50, kernel_size=(1,10), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+
+      layers.Dropout(0.5),
+      layers.Conv2D(filters=100, kernel_size=(1,10), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+
+      layers.Dropout(0.5),
+      layers.Conv2D(filters=200, kernel_size=(1,10), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+
+      layers.Flatten(),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+  model.compile(
+    loss='binary_crossentropy',
+    optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
   model.summary()
 
