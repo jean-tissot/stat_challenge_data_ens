@@ -22,23 +22,15 @@ def dataread():
     return X, y, X_final
 
 
-def preprocess_A1(X_train, X_test, preprocess='None'):
-    if preprocess == 'Standardization':
-        scaler = StandardScaler()
-        for i in range(X_train.shape[0]):
-            for j in range(40):
-                X_train[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_train[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess == 'Normalization':
-        scaler = MinMaxScaler()
-        for i in range(X_train.shape[0]):
-            for j in range(40):
-                X_train[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_train[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_test[i,j,:,:])))
+def preprocess_A1(X_train, X_test, preprocess=None):
+    
+    if preprocess:
+        transform = StandardScaler().fit_transform if preprocess == 'Standardization' else MinMaxScaler().fit_transform # preprocess == 'Normalization'
+        for j in range(40):
+            for i in range(X_train.shape[0]):
+                X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
+            for i in range(X_test.shape[0]):
+                X_test[i,j,:,:] = np.transpose(transform(np.transpose(X_test[i,j,:,:])))
     
     return X_train, X_test
 
@@ -110,7 +102,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
     return X_train, y_train, prop_HF
 
 
-def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
+def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
 
     x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
     
@@ -128,14 +120,11 @@ def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio=
     return x_train, x_test, y_train, y_test, prop_HF
 
 
-def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
-    print("\tsplitting data...")
+def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
     x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
 
-    print("\tpreprocessing data...")
     x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
 
-    print("\tresizing data...")
     x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
     y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
     x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
