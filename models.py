@@ -25,7 +25,7 @@ def model_of_test(input_shape):
 def lstm_model(input_shape):
   model = keras.Sequential(
     [
-      layers.LSTM(256, dropout = 0.1, recurrent_dropout = 0.3, input_shape=input_shape),
+      layers.LSTM(256, dropout = 0, recurrent_dropout = 0, input_shape=input_shape),
       layers.Dense(64, activation = 'relu'),
       layers.Dense(1, activation='sigmoid')
     ]
