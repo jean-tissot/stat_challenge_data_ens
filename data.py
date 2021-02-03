@@ -52,7 +52,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                 X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
                 y_train = np.delete(y_train, mask_h, 0)
             X, y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,1,:], y_train)
-            X = np.zeros(X.shape[0], 7, 500)
+            X = np.zeros((X.shape[0], 7, 500))
             for i in range(7):
                 X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
             X_train = X
