@@ -25,7 +25,7 @@ def dataread():
 def preprocess_A1(X_train, X_test, preprocess=None):
     
     if preprocess:
-        transform = StandardScaler().fit_transform if preprocess == 'Standardization' else MinMaxScaler().fit_transform # preprocess == 'Normalization'
+        transform = StandardScaler().fit_transform if 'tand' in preprocess else MinMaxScaler().fit_transform # Standardization ou Normalization
         for j in range(40):
             for i in range(X_train.shape[0]):
                 X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
@@ -52,7 +52,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                 X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
                 y_train = np.delete(y_train, mask_h, 0)
             X, y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,1,:], y_train)
-            X=np.zeros((X.shape[0],7,500))
+            X = np.zeros((X.shape[0], 7, 500))
             for i in range(7):
                 X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
             X_train = X
@@ -68,7 +68,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                 mask_h = []
                 mask_f = np.resize(mask_f, nb_h - nb_f) #liste de taille (nb_h - nb_f) d'indices de femmes à rajouter (potentiellement répétés)
 
-            else:
+            else: # duplicate/remove
                 nb = (nb_h - nb_f)//2
                 mask_h = mask_h[:nb]
                 mask_f = np.resize(mask_f, nb)
@@ -99,7 +99,7 @@ def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='b
     y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
     x_train, y_train = shuffle(x_train, y_train)
 
-    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method)
+    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method) # équilibrage homme-femme dans le dataset
     x_train, y_train = shuffle(x_train, y_train)
 
     x_train = x_train.reshape(x_train.shape[0], 7, 500, 1)  #Ajout d'une dimension aux données
@@ -114,11 +114,12 @@ def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='b
 
     x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
     y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
-    x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
-    x_test=x_test.transpose(0,1,3,2)
     x_train, y_train = shuffle(x_train, y_train)
 
-    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method)
+    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method) # équilibrage homme-femme dans le dataset
     x_train, y_train = shuffle(x_train, y_train)
+
+    x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
+    x_test=x_test.transpose(0,1,3,2)
 
     return x_train, x_test, y_train, y_test, prop_HF
