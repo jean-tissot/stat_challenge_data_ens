@@ -22,7 +22,7 @@ def model_of_test(input_shape):
   return model
 
 
-def lstm_model(input_shape):
+def lstm_model(input_shape, loss='binary_crossentropy'):
   model = keras.Sequential(
     [
       layers.LSTM(256, dropout = 0, recurrent_dropout = 0, input_shape=input_shape),
@@ -32,7 +32,7 @@ def lstm_model(input_shape):
   )
 
   model.compile(
-    loss='binary_crossentropy',
+    loss=loss,
     optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
     metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
