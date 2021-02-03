@@ -25,7 +25,7 @@ def dataread():
 def preprocess_A1(X_train, X_test, preprocess=None):
     
     if preprocess:
-        transform = StandardScaler().fit_transform if preprocess == 'Standardization' else MinMaxScaler().fit_transform # preprocess == 'Normalization'
+        transform = StandardScaler().fit_transform if 'tand' in preprocess else MinMaxScaler().fit_transform # Standardization ou Normalization
         for j in range(40):
             for i in range(X_train.shape[0]):
                 X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
