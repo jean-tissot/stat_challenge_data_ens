@@ -5,9 +5,9 @@ from tools import plot_loss_acc_history
 
 treat_function = datatreat_J1
 my_model = lstm_model
-test_fonction = test_1
-epochs=70
-batch_size=200
+test_fonction = test_2
+epochs=50
+batch_size=100
 id='test'
 preprocess='None'
 
@@ -24,7 +24,7 @@ print("\ntraining model...")
 history=model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_split=0.1)
 
 print("testing model...")
-accuracy, roc, f1_macro, f1_wei = test_1(model, x_test, y_test, id, increase_dim=False)
+accuracy, roc, f1_macro, f1_wei = test_fonction(model, x_test, y_test, id)
 
 #print("results (accuracy, roc, f1_macro, f1_wei):", accuracy, roc, f1_macro, f1_wei)
 plot_loss_acc_history(history, id, 0.1)
