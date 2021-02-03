@@ -1,4 +1,3 @@
-#from data import dataread, datatreat_4
 import os.path
 import sys
 import numpy as np
@@ -6,6 +5,15 @@ import tensorflow as tf
 from tensorflow import keras
 import itertools
 import matplotlib.pyplot as plt
+from tensorflow.keras import backend as K
+from tensorflow.keras.losses import BinaryCrossentropy
+
+def loss_generator(weight):
+    binCrossLoss=BinaryCrossentropy()
+    def loss_fn(y_true, y_pred):
+        y_true = tf.cast(y_true, tf.float32)
+        return binCrossLoss(y_true, y_pred, ((weight - 1) * y_true + 1) )
+    return loss_fn
 
 
 def vector_generator(data):
