@@ -1,0 +1,16 @@
+Acquisition des des donnees -> datatreat_A1 Standardized rem/SMOTE
+
+Modele -> cnn_4
+
+Parametres d'apprentissage :
+
+Epochs -> 150
+Batch_size -> 70
+Validation -> 0.1
+
+Resultats du test :
+
+Accuracy -> 82.63157894736842
+ROC AUC -> 0.6297134238310709
+f1 score (macro) -> 0.6492307692307692
+f1 score (weighted) -> 0.8092631578947368

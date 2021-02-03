@@ -1,0 +1,16 @@
+Acquisition des des donnees -> datatreat_A1 None rem/ADASYN
+
+Modele -> cnn_4
+
+Parametres d'apprentissage :
+
+Epochs -> 150
+Batch_size -> 70
+Validation -> 0.1
+
+Resultats du test :
+
+Accuracy -> 78.94736842105263
+ROC AUC -> 0.576016453092865
+f1 score (macro) -> 0.5811287477954143
+f1 score (weighted) -> 0.7428292954608744

@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import scale, StandardScaler, MinMaxScaler
 from sklearn.utils import shuffle
 import matplotlib.pyplot as plt
-from imblearn.over_sampling import SMOTE, ADASYN
+from imblearn.over_sampling import SMOTE
 
 
 def dataread():
@@ -23,7 +23,7 @@ def dataread():
 
 
 def preprocess_A1(X_train, X_test, preprocess='None'):
-    if preprocess == 'Standardization':
+    if preprocess == 'Stand':
         scaler = StandardScaler()
         for i in range(X_train.shape[0]):
             for j in range(40):
@@ -31,7 +31,7 @@ def preprocess_A1(X_train, X_test, preprocess='None'):
         for i in range(X_test.shape[0]):
             for j in range(40):
                 X_test[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess == 'Normalization':
+    if preprocess == 'Scale':
         scaler = MinMaxScaler()
         for i in range(X_train.shape[0]):
             for j in range(40):
@@ -54,7 +54,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
         nb_h = len(mask_h) #nombre d'hommes
         nb_f = len(mask_f) #nombre de femmes
 
-        if balancing_method == 'SMOTE':
+        if 'SMOTE' in balancing_method:
             if balancing_method == 'rem/SMOTE':
                 mask_h = mask_h[:-(2*nb_f)] #liste de taille (nb_h - (2*nb_f)) d'indices d'hommes à supprimer
                 X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
@@ -65,19 +65,6 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                 X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
             X_train = X
             y_train = y
-
-        elif balancing_method == 'ADASYN':
-            if balancing_method == 'rem/ADASYN':
-                mask_h = mask_h[:-(2*nb_f)] #liste de taille (nb_h - (2*nb_f)) d'indices d'hommes à supprimer
-                X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
-                y_train = np.delete(y_train, mask_h, 0)
-            X, y = ADASYN(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,1,:], y_train)
-            X=np.zeros((X.shape[0],7,500))
-            for i in range(7):
-                X[:,i,:], y = ADASYN(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
-                print(y.shape)
-            X_train = X
-            y_train = y  
         
         else:
 
