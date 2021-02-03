@@ -22,23 +22,15 @@ def dataread():
     return X, y, X_final
 
 
-def preprocess_A1(X_train, X_test, preprocess='None'):
-    if preprocess == 'Stand':
-        scaler = StandardScaler()
-        for i in range(X_train.shape[0]):
-            for j in range(40):
-                X_train[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_train[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_test[i,j,:,:])))
-    if preprocess == 'Scale':
-        scaler = MinMaxScaler()
-        for i in range(X_train.shape[0]):
-            for j in range(40):
-                X_train[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_train[i,j,:,:])))
-        for i in range(X_test.shape[0]):
-            for j in range(40):
-                X_test[i,j,:,:] = np.transpose(scaler.fit_transform(np.transpose(X_test[i,j,:,:])))
+def preprocess_A1(X_train, X_test, preprocess=None):
+    
+    if preprocess:
+        transform = StandardScaler().fit_transform if preprocess == 'Standardization' else MinMaxScaler().fit_transform # preprocess == 'Normalization'
+        for j in range(40):
+            for i in range(X_train.shape[0]):
+                X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
+            for i in range(X_test.shape[0]):
+                X_test[i,j,:,:] = np.transpose(transform(np.transpose(X_test[i,j,:,:])))
     
     return X_train, X_test
 
