@@ -34,7 +34,7 @@ def lstm_model(input_shape):
   model.compile(
     loss='binary_crossentropy',
     optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
-    metrics=['accuracy']
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
   
   return model

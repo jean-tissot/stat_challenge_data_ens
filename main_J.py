@@ -1,21 +1,22 @@
 from data import dataread, datatreat_A1, datatreat_J1
-from test import test_1
+from test import test_1,test_2
 from models import model_of_test, lstm_model
 from tools import plot_loss_acc_history
 
 treat_function = datatreat_J1
 my_model = lstm_model
 test_fonction = test_2
-epochs=50
+epochs=80
 batch_size=100
 id='test'
-preprocess='None'
+preprocess=None
+balancing_method='SMOTE'
 
 print("loading data...")
 x, y, x_final = dataread()
 
 print("treating data...")
-x_train, x_test, y_train, y_test, prop = treat_function(x, y, preprocess=preprocess, balancing_method='duplicate', ratio='50/50')
+x_train, x_test, y_train, y_test, prop = treat_function(x, y, preprocess=preprocess, balancing_method=balancing_method, ratio='50/50')
 
 print("\nforme des données d'entrée: ", x_train[0].shape)
 model = my_model(x_train[0].shape)
