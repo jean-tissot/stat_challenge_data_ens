@@ -4,7 +4,7 @@ from models import model_of_test, lstm_model
 from tools import plot_loss_acc_history, loss_generator
 from tensorflow.keras.callbacks import EarlyStopping
 
-id='lstm_customloss'
+id='lstm_customloss_3.5'
 epochs=50
 batch_size=100
 preprocess='standardization'
@@ -22,7 +22,7 @@ print("treating data...")
 x_train, x_test, y_train, y_test, prop_HF = treat_function(x, y, preprocess=preprocess, balancing_method=balancing_method, ratio=ratio)
 
 print("\nforme des données d'entrée: ", x_train[0].shape)
-model = my_model(x_train[0].shape, loss=loss_generator(prop_HF))
+model = my_model(x_train[0].shape, loss=loss_generator(3.5))
 model.summary()
 
 print("\ntraining model...")
