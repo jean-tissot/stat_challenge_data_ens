@@ -97,7 +97,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
     return X_train, y_train, prop_HF
 
 
-def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
+def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
 
     x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
     
@@ -115,14 +115,11 @@ def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio=
     return x_train, x_test, y_train, y_test, prop_HF
 
 
-def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess='None', ratio='base', balancing_method='duplicate/remove'):
-    print("\tsplitting data...")
+def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
     x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
 
-    print("\tpreprocessing data...")
     x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
 
-    print("\tresizing data...")
     x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
     y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
     x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
