@@ -39,6 +39,24 @@ def lstm_model(input_shape, loss='binary_crossentropy'):
   
   return model
 
+def lstm_model_2(input_shape, loss='binary_crossentropy'):
+  model = keras.Sequential(
+    [
+      layers.LSTM(256, input_shape=input_shape, return_sequences=True),
+      layers.LSTM(128, return_sequences=True),
+      layers.Flatten(),
+      layers.Dense(64),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+
+  model.compile(
+    loss=loss,
+    optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
+  )
+  
+  return model
 
 # CNN article Nature
 def cnn_1():
