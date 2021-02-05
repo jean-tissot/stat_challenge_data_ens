@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow import keras
 from sklearn.metrics import roc_auc_score, confusion_matrix, f1_score
 
+
 def test(predicts, y_test, id):
     predicts2=np.transpose(predicts>0.5)[0]
     accuracy=(np.count_nonzero(predicts2==y_test))/len(y_test)*100
@@ -26,7 +27,8 @@ def test(predicts, y_test, id):
 
     return accuracy, roc, f1_macro, f1_wei
 
-def test_1(model, X_test, y_test, id, increase_dim=True):
+
+def test_1(model, X_test, y_test=None, id=None, increase_dim=True):
     predicts=[]
     for i in range(40):
         X_test_i=X_test[:,i,:,:]
@@ -34,7 +36,12 @@ def test_1(model, X_test, y_test, id, increase_dim=True):
             X_test_i=X_test_i.reshape(X_test_i.shape[0], X_test_i.shape[1], X_test_i.shape[2], 1)
         predicts.append(model.predict(X_test_i))
     predicts=np.mean(predicts, axis=0)
-    return test(predicts, y_test, id)
+
+    if y_test:
+        return test(predicts, y_test, id)
+    else:
+        return predicts
+
 
 def test_2(model, x_test, y_test, id):
     return test_1(model, x_test, y_test, id, increase_dim=False)

@@ -59,7 +59,7 @@ def lstm_model_2(input_shape, loss='binary_crossentropy'):
   return model
 
 # CNN article Nature
-def cnn_1():
+def cnn_1(loss='binary_crossentropy'):
   model = keras.Sequential(
     [
       layers.Conv2D(100, (3,3), padding='same', activation='relu', input_shape=(7,500,1)),
@@ -82,7 +82,7 @@ def cnn_1():
     ]
   )
   model.compile(
-    loss='binary_crossentropy',
+    loss=loss,
     optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
     metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
@@ -92,7 +92,7 @@ def cnn_1():
 
 
 # CNN deep ConvNet
-def cnn_4():
+def cnn_4(loss='binary_crossentropy'):
   model = keras.Sequential(
     [
       layers.Conv2D(filters=25, kernel_size=(1,10), strides=1, padding='same', input_shape=(7,500,1)),
@@ -124,7 +124,7 @@ def cnn_4():
     ]
   )
   model.compile(
-    loss='binary_crossentropy',
+    loss=loss,
     optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
     metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
@@ -134,7 +134,7 @@ def cnn_4():
 
 
 # CNN shallow ConvNet
-def cnn_5():
+def cnn_5(loss='binary_crossentropy'):
   model = keras.Sequential(
     [
       layers.Conv2D(filters=40, kernel_size=(1,25), strides=1, padding='same', input_shape=(7,500,1)),
@@ -149,7 +149,7 @@ def cnn_5():
     ]
   )
   model.compile(
-    loss='binary_crossentropy',
+    loss=loss,
     optimizer=keras.optimizers.Adamax(learning_rate=0.002, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
     metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )

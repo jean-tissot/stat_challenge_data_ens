@@ -7,6 +7,19 @@ import itertools
 import matplotlib.pyplot as plt
 from tensorflow.keras import backend as K
 from tensorflow.keras.losses import BinaryCrossentropy
+import csv
+
+
+def save_submission(y_pred, id):
+    with open(id + '.csv', 'w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(["id", "label"])
+        for i in range(len(y_pred)):
+            if y_pred[i]>0.5:
+                writer.writerow([i, 1])
+            else:
+                writer.writerow([i, 0])
+
 
 def loss_generator(weight):
     binCrossLoss=BinaryCrossentropy()
@@ -123,13 +136,6 @@ def plot_loss_acc_history(history, id, validation_split=0):
 
 
 # Fonctions d'activation custom
-def square_nonlin(x):
-    orig = x
-    x = tf.where(orig >2.0, (tf.ones_like(x)) , x)
-    x = tf.where(tf.logical_and(0.0 <= orig, orig <=2.0), (x - tf.math.square(x)/4.), x)
-    x = tf.where(tf.logical_and(-2.0 <= orig, orig < 0), (x + tf.math.square(x)/4.), x)
-    return tf.where(orig < -2.0, -tf.ones_like(x), x)
-
 def square(x):
   return x*x
 

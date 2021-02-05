@@ -25,7 +25,7 @@ def dataread():
 def preprocess_A1(X_train, X_test, preprocess=None):
     
     if preprocess:
-        transform = StandardScaler().fit_transform if 'tand' in preprocess else MinMaxScaler().fit_transform # Standardization ou Normalization
+        transform = StandardScaler().fit_transform if 'tand' in preprocess else MinMaxScaler().fit_transform # Standardization ou Scaling
         for j in range(40):
             for i in range(X_train.shape[0]):
                 X_train[i,j,:,:] = np.transpose(transform(np.transpose(X_train[i,j,:,:])))
@@ -89,10 +89,14 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
     return X_train, y_train, prop_HF
 
 
-def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
-
-    x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
+def datatreat_A1(x0, y0, x_test=None, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
     
+    if x_test is None:
+        x_train, x_test, y_train, y_test = train_test_split(x0, y0, train_size=train_size, shuffle=Shuffle)
+    else:
+        x_train = x0
+        y_train = y0
+
     x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
 
     x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
@@ -104,7 +108,10 @@ def datatreat_A1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='b
 
     x_train = x_train.reshape(x_train.shape[0], 7, 500, 1)  #Ajout d'une dimension aux données
 
-    return x_train, x_test, y_train, y_test, prop_HF
+    if x_test is None:
+        return x_train, x_test, y_train, y_test, prop_HF
+    else:
+        return x_train, x_test, y_train, prop_HF
 
 
 def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
