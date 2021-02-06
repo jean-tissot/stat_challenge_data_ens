@@ -1,19 +1,19 @@
-from data import dataread, datatreat_A1, datatreat_J1
-from test import test_1,test_2
+from data import dataread, datatreat_A1, datatreat_J1, datatreat_J2, datatreat_J3
+from test import test_1,test_J1, test_J2, test_J3
 from models import model_of_test, lstm_model, lstm_model_2
 from tools import plot_loss_acc_history, loss_generator
 from tensorflow.keras.callbacks import EarlyStopping
 
-id='lstm_2'
-epochs=70
-batch_size=100
-preprocess=None
+id='lstm_2_(14_Drop2_28_Drop2)_stand_sous-sequences_100_25'
+epochs=100
+batch_size=50
+preprocess='standardization'
 ratio='50/50'
 balancing_method='remove'
 validation_split=0.1
-treat_function = datatreat_J1
+treat_function = datatreat_J3
 my_model = lstm_model_2
-test_fonction = test_2
+test_fonction = test_J3
 
 print("loading data...")
 x, y, x_final = dataread()

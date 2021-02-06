@@ -42,10 +42,12 @@ def lstm_model(input_shape, loss='binary_crossentropy'):
 def lstm_model_2(input_shape, loss='binary_crossentropy'):
   model = keras.Sequential(
     [
-      layers.LSTM(256, input_shape=input_shape, return_sequences=True),
-      layers.LSTM(128, return_sequences=True),
+      layers.LSTM(14, input_shape=input_shape, return_sequences=True),
+      layers.Dropout(0.2),
+      layers.LSTM(28, return_sequences=False),
+      layers.Dropout(0.2),
       layers.Flatten(),
-      layers.Dense(64),
+      #layers.Dense(28, activation='relu'),
       layers.Dense(1, activation='sigmoid')
     ]
   )
