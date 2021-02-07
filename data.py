@@ -40,7 +40,7 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
     y_train=np.array(y_train)
 
     if ratio == "50/50": #on suppose que nb_f < nb_h (dans le cas contraire il suffirait d'inverser nb_f et nb_h, ainsi que mask_f et mask_
-
+        
         mask_h = np.where(y_train==0)[0] #indices de tous les hommes
         mask_f = np.where(y_train==1)[0] #indices de toutes les femmes
         nb_h = len(mask_h) #nombre d'hommes
@@ -52,8 +52,8 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
                 X_train = np.delete(X_train, mask_h, 0) #suppression de la liste des hommes
                 y_train = np.delete(y_train, mask_h, 0)
             X, y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,1,:], y_train)
-            X = np.zeros((X.shape[0], 7, 500))
-            for i in range(7):
+            X = np.zeros((X.shape[0], X.shape[1], 500))
+            for i in range(X.shape[1]):
                 X[:,i,:], y = SMOTE(sampling_strategy=1, n_jobs=-2).fit_resample(X_train[:,i,:], y_train)
             X_train = X
             y_train = y
@@ -120,8 +120,8 @@ def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='b
 
     x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
 
-    x_train=np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
-    y_train=np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
+    x_train = np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
+    y_train = np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
     x_train, y_train = shuffle(x_train, y_train)
 
     x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method) # équilibrage homme-femme dans le dataset
@@ -129,5 +129,49 @@ def datatreat_J1(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='b
 
     x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
     x_test=x_test.transpose(0,1,3,2)
+
+    return x_train, x_test, y_train, y_test, prop_HF
+
+def datatreat_J2(X0, y0, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
+    x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
+
+    x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
+
+    x_train = np.concatenate(x_train.transpose(1,2,0,3)).transpose(1,0,2)  #regroupement des 40 fenêtres indépendantes comme des canaux supplémentaires (40*7 canaux par personne)
+    x_test = np.concatenate(x_test.transpose(1,2,0,3)).transpose(1,0,2)
+
+    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method) # équilibrage homme-femme dans le dataset
+    x_train, y_train = shuffle(x_train, y_train)
+
+    x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7*40 et dimension EEG de taille 500)
+    x_test=x_test.transpose(0,2,1)
+
+    return x_train, x_test, y_train, y_test, prop_HF
+
+
+def datatreat_J3(X0, y0, train_size=0.8, seq_len=100, pas=25, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
+    x_train, x_test, y_train, y_test = train_test_split(X0, y0, train_size=train_size, shuffle=Shuffle)
+
+    x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
+
+    x_train = np.concatenate(x_train, axis=0)  #sépération des 40 fenêtres indépendantes (comme si chaque fenêtre correspondait à une personne)
+    y_train = np.repeat(y_train, 40)  #Multiplication par 40 de chaque personne (car séparation des fenêtres)
+    x_train, y_train = shuffle(x_train, y_train)
+
+    x_train, y_train, prop_HF = balancing_A1(x_train, y_train, ratio, balancing_method) # équilibrage homme-femme dans le dataset
+    x_train, y_train = shuffle(x_train, y_train)
+
+    x_train=x_train.transpose(0,2,1)  #Echange des 2èmes et 3èmes dimensions (dimension canal de taille 7 et dimension EEG de taille 500)
+    x_test=x_test.transpose(0,1,3,2)
+
+    N=int((x_train.shape[1] - seq_len)/pas) #cacul du nombre de sous séquence de longueur seq_len qu'on va extraire avec un pas de longueur pas
+    
+    x_train_decoupe = np.zeros((N*len(x_train), seq_len, 7))
+    for i in range(len(x_train)): #découpage de chaque élément de x_train en N séquences de longueur seq_len, et ajout de toutes ses séquences dans une array de longueur N*len(x_train)
+        for j in range(N):
+            x_train_decoupe[i*j]=x_train[i, j*pas:j*pas+seq_len, :]
+    y_train_decoupe = np.repeat(y_train, N) #multiplication par N de chaque personne (car N séquences correspondent à 1 personne)
+
+    x_train, y_train = shuffle(x_train_decoupe, y_train_decoupe)
 
     return x_train, x_test, y_train, y_test, prop_HF

@@ -1,0 +1,12 @@
+Forme des données d'entrée du LSTM:
+3D ?
+batch_size, timestep, feature
+
+
+1 couche lstm: many to one
+2 couches lstm: many to many, many to one
+
+Ne pas mettre de Dense avant le LSTM pour ne pas perdre l'aspect temporel des données
+
+many to many: étiquetage (à chaque pas temporelle on étiquette la donnée, en prenant en compte la donnée d'entrée et les données précédentes)
+many to one: classification (on ne prend que la dernière data de sortie, qui dépend de toute les données d'entrée)

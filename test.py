@@ -37,11 +37,23 @@ def test_1(model, X_test, y_test=None, id=None, increase_dim=True):
         predicts.append(model.predict(X_test_i))
     predicts=np.mean(predicts, axis=0)
 
-    if y_test is None:
-        return predicts
-    else:
-        return test(predicts, y_test, id)
+    return predicts if y_test is None else test(predicts, y_test, id)
 
 
-def test_2(model, x_test, y_test, id):
+
+def test_J1(model, x_test, y_test, id):
     return test_1(model, x_test, y_test, id, increase_dim=False)
+
+def test_J2(model, X_test, y_test, id):
+    predicts = model.predict(X_test)
+    return test(predicts, y_test, id)
+
+def test_J3(model, X_test, y_test, id, seq_len=100, pas=25):
+    N=int((X_test.shape[2] - seq_len)/pas)
+    predicts=np.zeros((len(X_test), 40, N, 1))
+    for k in range(40):
+        X_test_k = X_test[:,k,:,:]
+        for j in range(N):
+            predicts[:,k,j,:]=model.predict(X_test_k[:, j*pas:j*pas+seq_len, :])
+    predicts=np.mean(np.mean(predicts,axis=2),axis=1)
+    return test(predicts, y_test, id)

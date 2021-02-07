@@ -36,9 +36,94 @@ def lstm_model(input_shape, loss='binary_crossentropy'):
     optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
     metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
   )
+
+  model.summary()
   
   return model
 
+def lstm_model_2(input_shape, loss='binary_crossentropy'):
+  model = keras.Sequential(
+    [
+      layers.LSTM(14, input_shape=input_shape, return_sequences=True),
+      layers.Dropout(0.2),
+      layers.LSTM(28, return_sequences=False),
+      layers.Dropout(0.2),
+      layers.Flatten(),
+      #layers.Dense(28, activation='relu'),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+
+  model.compile(
+    loss=loss,
+    optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
+  )
+
+  model.summary()
+  
+  return model
+
+def lstm_model_3(input_shape, loss='binary_crossentropy'):
+  model = keras.Sequential(
+    [
+      layers.LSTM(28, return_sequences=False,  input_shape=input_shape),
+      layers.Dropout(0.1),
+      #layers.Flatten(),
+      #layers.Dense(28, activation='relu'),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+
+  model.compile(
+    loss=loss,
+    optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
+  )
+
+  model.summary()
+
+  return model
+
+def lstm_cnn(input_shape, loss='binary_crossentropy'):
+  model = keras.Sequential(
+    [
+      layers.Conv2D(filters=25, kernel_size=(1,10), strides=1, padding='same', input_shape=input_shape),
+      layers.Conv2D(filters=25, kernel_size=(7,1), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+      
+      layers.Dropout(0.3),
+      layers.Conv2D(filters=50, kernel_size=(1,10), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+
+      layers.Dropout(0.3),
+      layers.Conv2D(filters=100, kernel_size=(1,10), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+
+      layers.Dropout(0.3),
+      layers.Conv2D(filters=200, kernel_size=(1,10), strides=1, padding='same', use_bias=False),
+      layers.BatchNormalization(momentum=0.1, epsilon=0.00001),
+      layers.Activation('elu'),
+      layers.MaxPool2D(pool_size=(1,3), strides=(1,3), padding='same'),
+
+      layers.Flatten(),
+      layers.Dense(1, activation='sigmoid')
+    ]
+  )
+  model.compile(
+    loss=loss,
+    optimizer=keras.optimizers.Adamax(learning_rate=0.005, beta_1=0.9, beta_2=0.999, epsilon=1e-07),
+    metrics=[keras.metrics.BinaryAccuracy(name='accuracy'), keras.metrics.AUC(name='AUC')]
+  )
+  model.summary()
+
+  return model
 
 # CNN article Nature
 def cnn_1(loss='binary_crossentropy'):
@@ -55,9 +140,6 @@ def cnn_1(loss='binary_crossentropy'):
       layers.Dropout(0.25),
       layers.Conv2D(300, (1,7), padding='same', activation='relu'),
       layers.MaxPool2D((1,2), padding='same'),
-      layers.Dropout(0.25),
-      layers.Conv2D(100, (1,3), padding='same', activation='relu'),
-      layers.Conv2D(100, (1,3), padding='same', activation='relu'),
       layers.Flatten(),
       layers.Dense(3500, activation='relu'),
       layers.Dense(1, activation='sigmoid')
