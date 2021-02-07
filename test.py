@@ -37,10 +37,8 @@ def test_1(model, X_test, y_test=None, id=None, increase_dim=True):
         predicts.append(model.predict(X_test_i))
     predicts=np.mean(predicts, axis=0)
 
-    if y_test:
-        return test(predicts, y_test, id)
-    else:
-        return predicts
+    return predicts if y_test is None else test(predicts, y_test, id)
+
 
 
 def test_J1(model, x_test, y_test, id):

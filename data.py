@@ -89,13 +89,14 @@ def balancing_A1(X_train, y_train, ratio="base", balancing_method="duplicate/rem
     return X_train, y_train, prop_HF
 
 
-def datatreat_A1(x0, y0, x_test=None, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
+def datatreat_A1(x0, y0, x_final=None, train_size=0.8, Shuffle=True, preprocess=None, ratio='base', balancing_method='duplicate/remove'):
     
-    if x_test is None:
+    if x_final is None:
         x_train, x_test, y_train, y_test = train_test_split(x0, y0, train_size=train_size, shuffle=Shuffle)
     else:
         x_train = x0
         y_train = y0
+        x_test = x_final
 
     x_train, x_test = preprocess_A1(x_train, x_test, preprocess)
 
@@ -108,7 +109,7 @@ def datatreat_A1(x0, y0, x_test=None, train_size=0.8, Shuffle=True, preprocess=N
 
     x_train = x_train.reshape(x_train.shape[0], 7, 500, 1)  #Ajout d'une dimension aux données
 
-    if x_test is None:
+    if x_final is None:
         return x_train, x_test, y_train, y_test, prop_HF
     else:
         return x_train, x_test, y_train, prop_HF
