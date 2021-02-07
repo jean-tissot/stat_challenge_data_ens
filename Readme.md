@@ -1,16 +1,16 @@
 # Challenge data - Cours de STAT - Centrale Nantes
 ## Structure du projet
 Pour le moment projet sous forme de fichiers .py, à mettre à la fin sous forme d'un Jupiter Notebook  
-- Un fichier pour **charger les données** (read_data.py)  
-- Un fichier pour **traiter les données** (treat_data.py)  
-- Un fichier pour **créer le(s) modèle(s)** (model.py)  
-- Un fichier pour **entrainer le(s) modèle(s)** (train_model.py)  
-- Un fichier pour **tester le(s) modèle(s)** (test_model.py)  
+- Un fichier pour **charger et traiter les données** (data.py)  
+- Un fichier pour **créer les modèles** (models.py)  
+- Un fichier pour **tester les modèles** (test.py)  
+- Un fichier pour **définir des fonctions utiles** (tools.py)  
+- Un fichier pour **superviser l'appel des différentes fonctions** (main_X.py ou notebook_X.ipynb)  
  
-Dans chaque fichier chacun crée sa fonction en lui donnant un nom logique (sauf s'il compte utiliser une fonction faite par un autre). Par exemple dans model.py si qqn utilise un *modèle 1* et qu'un autre utilise un *modèle 2*, il devrait y avoir deux fonctions (*model1* et *model2*) prenant en paramètres ceux dont on a besoin et retournant un modèle.  
+Dans chaque fichier on crée ses fonction en leur donnant des noms logique (sauf si on compte utiliser une fonction faite par un autre). Par exemple dans models.py si qqn utilise un *modèle 1* et qu'un autre utilise un *modèle 2*, il devrait y avoir deux fonctions (*model1* et *model2*) prenant en paramètres ceux dont on a besoin et retournant un modèle.  
 
 ## But du projet
-Etre capable de prédire le sexe d'une personne à partir de son activité cérébrale la nuit.
+Etre capable de prédire le sexe d'une personne à partir de son activité cérébrale la nuit.  
 
 ### Données
 Pour chaque **donnée** *x* (activité cérébrale) correspond la **classe** *y* (sexe) correspondante
