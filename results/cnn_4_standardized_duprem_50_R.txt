@@ -1,0 +1,16 @@
+Acquisition des des donnees -> datatreat_A1 Standardization duplicate/remove
+
+Modele -> cnn_1
+
+Parametres d'apprentissage :
+
+Epochs -> 50
+Batch_size -> 70
+Validation -> 0.1
+
+Resultats du test :
+
+Accuracy -> 80.0
+ROC AUC -> 0.7010939510939511
+f1 score (macro) -> 0.7045342936650842
+f1 score (weighted) -> 0.7982321165493533
